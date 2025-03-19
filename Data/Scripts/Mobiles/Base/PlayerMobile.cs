@@ -20,6 +20,7 @@ using Server.Regions;
 using Server.Accounting;
 using Server.Engines.Craft;
 using Server.Engines.PartySystem;
+using Server.Engines.XmlSpawner2;
 
 namespace Server.Mobiles
 {
@@ -3882,6 +3883,13 @@ namespace Server.Mobiles
 		}
 
 		public override bool NewGuildDisplay { get { return Server.Guilds.Guild.NewGuildSystem; } }
+
+		// Support for XMLTitle attachment
+        public override void AddNameProperties(ObjectPropertyList list)
+        {
+            base.AddNameProperties(list);
+            XmlTitle.AddTitles(this, list);
+        } 
 
 		public override void GetProperties( ObjectPropertyList list )
 		{
