@@ -1190,6 +1190,57 @@ namespace Server
 
 			return level;
 		}
+		
+		public static int RandomLootLevel()
+		{
+			return Utility.RandomMinMax(1, 12);
+		}
+		
+		public static Item EnchantItem(int enchant, Item item)
+		{
+			if ( item != null )
+			{
+				int props = Utility.RandomMinMax( (int)(enchant/100), (int)(enchant/30) );
+					if ( props < 1 )
+						return item;
+
+				int min = (int)(enchant/10);
+				int max = (int)(enchant/4);
+					if ( min < 1 ){ min = 1; }
+					if ( max <= min ){ max = min + 1; }
+
+				if ( enchant == 9999 )
+				{
+					props = Utility.RandomMinMax( LootPackEntry.GetResourceAttrs( item.Resource ).RunicMinAttributes, LootPackEntry.GetResourceAttrs( item.Resource ).RunicMaxAttributes );
+						if ( props < 1 )
+							return item;
+
+					min = LootPackEntry.GetResourceAttrs( item.Resource ).RunicMinIntensity;
+					max = LootPackEntry.GetResourceAttrs( item.Resource ).RunicMaxIntensity;
+						if ( min < 1 ){ min = 1; }
+						if ( max <= min ){ max = min + 1; }
+				}
+
+				if ( item is BaseWeapon )
+					BaseRunicTool.ApplyAttributesTo( (BaseWeapon)item, props, min, max );
+				else if ( item is BaseArmor )
+					BaseRunicTool.ApplyAttributesTo( (BaseArmor)item, props, min, max );
+				else if ( item is BaseTrinket )
+					BaseRunicTool.ApplyAttributesTo( (BaseTrinket)item, props, min, max );
+				else if ( item is BaseQuiver )
+					BaseRunicTool.ApplyAttributesTo( (BaseQuiver)item, props, min, max );
+				else if ( item is BaseHat )
+					BaseRunicTool.ApplyAttributesTo( (BaseHat)item, props, min, max );
+				else if ( item is BaseClothing )
+					BaseRunicTool.ApplyAttributesTo( (BaseClothing)item, props, min, max );
+				else if ( item is BaseInstrument )
+					BaseRunicTool.ApplyAttributesTo( (BaseInstrument)item, props, min, max );
+				else if ( item is Spellbook )
+					BaseRunicTool.ApplyAttributesTo( (Spellbook)item, props, min, max );
+			}
+
+			return item;
+		}
 
 		public static int FillCycle( int level )
 		{

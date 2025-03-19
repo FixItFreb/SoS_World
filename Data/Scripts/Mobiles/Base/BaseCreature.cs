@@ -8515,6 +8515,8 @@ namespace Server.Mobiles
 					{
 						Titles.AwardFame( titles[ i ], fame[ i ], true );
 						Titles.AwardKarma( titles[ i ], karma[ i ], true );
+						// modification to support XmlQuest Killtasks
+						XmlQuest.RegisterKill( this, titles[ i ]);
 					}
 				}
 

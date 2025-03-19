@@ -248,8 +248,26 @@ namespace Server.Items
 
 				from.CheckStatTimers();
 			}
-
-			base.OnAdded( parent );
+			
+			
+			//base.OnAdded( parent );
+			// XmlAttachment check for OnEquip and CanEquip
+			if(parent is Mobile)
+    		{
+        		if(Server.Engines.XmlSpawner2.XmlAttach.CheckCanEquip(this, (Mobile)parent))
+        		{
+        			Server.Engines.XmlSpawner2.XmlAttach.CheckOnEquip(this, (Mobile)parent);
+					base.OnAdded( parent );
+        		}
+				else
+        		{
+        			((Mobile)parent).AddToBackpack(this);
+        		}
+    		}
+			else
+			{
+				base.OnAdded( parent );
+			}
 		}
 
 		public override void OnRemoved( object parent )
@@ -268,6 +286,9 @@ namespace Server.Items
 
 				from.CheckStatTimers();
 			}
+			
+			// XmlAttachment check for OnRemoved
+			Server.Engines.XmlSpawner2.XmlAttach.CheckOnRemoved(this, parent);
 		}
 
 		public BaseTrinket( Serial serial ) : base( serial )
@@ -407,6 +428,9 @@ namespace Server.Items
 
 			if ( m_HitPoints >= 0 && m_MaxHitPoints > 0 )
 				list.Add( 1060639, "{0}\t{1}", m_HitPoints, m_MaxHitPoints ); // durability ~1_val~ / ~2_val~
+			
+			// mod to display attachment properties
+			Server.Engines.XmlSpawner2.XmlAttach.AddAttachmentProperties(this, list);
 		}
 
 		public override void Serialize( GenericWriter writer )
