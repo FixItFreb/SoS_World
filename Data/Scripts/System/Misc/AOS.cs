@@ -11,6 +11,7 @@ using Server.Spells.Fifth;
 using Server.Spells.Seventh;
 using Server.Spells.Ninjitsu;
 using Server.Spells.Shinobi;
+using Server.Engines.XmlSpawner2;
 
 namespace Server
 {
@@ -431,8 +432,27 @@ namespace Server
 
 		public int this[AosAttribute attribute]
 		{
-			get { return GetValue( (int)attribute ); }
-			set { SetValue( (int)attribute, value ); }
+			// get { return GetValue( (int)attribute ); }
+			// set { SetValue( (int)attribute, value ); }
+			//ARTEGORDONMOD
+			// add support for XmlAosAttributes attachment
+			get { return ExtendedGetValue((int)attribute); }
+			set { SetValue((int)attribute, value); }
+		}
+
+		//ARTEGORDONMOD
+		// add support for XmlAosAttributes attachment
+		public int ExtendedGetValue(int bitmask)
+		{
+			int value = GetValue(bitmask);
+
+			XmlAosAttributes xaos = (XmlAosAttributes)XmlAttach.FindAttachment(Owner, typeof(XmlAosAttributes));
+			if (xaos != null)
+			{
+				value += xaos.GetValue(bitmask);
+			}
+
+			return (value);
 		}
 
 		public override string ToString()
@@ -617,9 +637,28 @@ namespace Server
 
 		public int this[AosWeaponAttribute attribute]
 		{
-			get { return GetValue( (int)attribute ); }
-			set { SetValue( (int)attribute, value ); }
+			// get { return GetValue( (int)attribute ); }
+			// set { SetValue( (int)attribute, value ); }
+			//ARTEGORDONMOD
+			// add support for XmlAosWeaponAttributes attachment
+			get { return ExtendedGetValue((int)attribute); }
+			set { SetValue((int)attribute, value); }
 		}
+
+		//ARTEGORDONMOD
+		// add support for XmlAosWeaponAttributes attachment
+		public int ExtendedGetValue(int bitmask)
+		{
+			int value = GetValue(bitmask);
+
+			XmlAosWeaponAttributes xaos = (XmlAosWeaponAttributes)XmlAttach.FindAttachment(Owner, typeof(XmlAosWeaponAttributes));
+			if (xaos != null)
+			{
+				value += xaos.GetValue(bitmask);
+			}
+
+			return (value);
+		} 
 
 		public override string ToString()
 		{
@@ -761,9 +800,28 @@ namespace Server
 
 		public int this[AosArmorAttribute attribute]
 		{
-			get { return GetValue( (int)attribute ); }
-			set { SetValue( (int)attribute, value ); }
+			// get { return GetValue( (int)attribute ); }
+			// set { SetValue( (int)attribute, value ); }
+			//ARTEGORDONMOD
+			// add support for XmlAosArmorAttributes attachment
+			get { return ExtendedGetValue((int)attribute); }
+			set { SetValue((int)attribute, value); }
 		}
+
+		//ARTEGORDONMOD
+		// add support for XmlAosArmorAttributes attachment
+		public int ExtendedGetValue(int bitmask)
+		{
+			int value = GetValue(bitmask);
+
+			XmlAosArmorAttributes xaos = (XmlAosArmorAttributes)XmlAttach.FindAttachment(Owner, typeof(XmlAosArmorAttributes));
+			if (xaos != null)
+			{
+				value += xaos.GetValue(bitmask);
+			}
+
+			return (value);
+		} 
 
 		public override string ToString()
 		{
@@ -1108,9 +1166,28 @@ namespace Server
 
 		public int this[AosElementAttribute attribute]
 		{
-			get { return GetValue( (int)attribute ); }
-			set { SetValue( (int)attribute, value ); }
+			// get { return GetValue( (int)attribute ); }
+			// set { SetValue( (int)attribute, value ); }
+			//ARTEGORDONMOD
+			// add support for XmlAosElementAttributes attachment
+			get { return ExtendedGetValue((int)attribute); }
+			set { SetValue((int)attribute, value); }
 		}
+
+		//ARTEGORDONMOD
+		// add support for XmlAosElementAttributes attachment
+		public int ExtendedGetValue(int bitmask)
+		{
+			int value = GetValue(bitmask);
+
+			XmlAosElementAttributes xaos = (XmlAosElementAttributes)XmlAttach.FindAttachment(Owner, typeof(XmlAosElementAttributes));
+			if (xaos != null)
+			{
+				value += xaos.GetValue(bitmask);
+			}
+
+			return (value);
+		} 
 
 		public override string ToString()
 		{

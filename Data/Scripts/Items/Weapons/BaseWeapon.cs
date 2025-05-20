@@ -726,7 +726,16 @@ namespace Server.Items
 			}
 			else
 			{
-				return base.CanEquip( from );
+				//return base.CanEquip( from );
+				// XmlAttachment check for CanEquip
+				if (!Server.Engines.XmlSpawner2.XmlAttach.CheckCanEquip(this, from))
+				{
+					return false;
+				}
+				else
+				{
+					return base.CanEquip(from);
+				}
 			}
 		}
 
@@ -778,6 +787,8 @@ namespace Server.Items
 
 			if ( Server.Misc.PlayerSettings.AutoOpenWepBar( from ) ){ CustomWeaponAbilities.Check(this,from); }
 
+			// XmlAttachment check for OnEquip
+			Server.Engines.XmlSpawner2.XmlAttach.CheckOnEquip(this, from);
 			return true;
 		}
 
@@ -842,6 +853,9 @@ namespace Server.Items
 
 				CustomWeaponAbilities.Check(m);
 			}
+			
+			// XmlAttachment check for OnRemoved
+			Server.Engines.XmlSpawner2.XmlAttach.CheckOnRemoved(this, parent);
 		}
 
 		public virtual SkillName GetUsedSkill( Mobile m, bool checkSkillAttrs )
@@ -1245,6 +1259,8 @@ namespace Server.Items
 		public virtual int AbsorbDamageAOS( Mobile attacker, Mobile defender, int damage )
 		{
 			bool blocked = false;
+			// XmlAttachment check for OnArmorHit
+			int originaldamage = damage;
 
 			if ( defender.Player || defender.Body.IsHuman )
 			{
@@ -1287,6 +1303,9 @@ namespace Server.Items
 					{
 						shield.OnHit( this, damage ); // call OnHit to lose durability
 						LevelItemManager.RepairItems( defender );
+						
+						// XmlAttachment check for OnArmorHit
+						Server.Engines.XmlSpawner2.XmlAttach.OnArmorHit(attacker, defender, shield, this, originaldamage);
 					}
 				}
 			}
@@ -1303,6 +1322,9 @@ namespace Server.Items
 					{
 						armor.OnHit( this, damage ); // call OnHit to lose durability
 						LevelItemManager.RepairItems( defender );
+						
+						// XmlAttachment check for OnArmorHit
+						damage -= Server.Engines.XmlSpawner2.XmlAttach.OnArmorHit(attacker, defender, arms, this, originaldamage);
 					}
 				}
 			}
@@ -1857,6 +1879,9 @@ namespace Server.Items
 					}
 				}
 			}
+			
+			// hook for attachment OnWeaponHit method
+			Server.Engines.XmlSpawner2.XmlAttach.OnWeaponHit(this, attacker, defender, damageGiven);
 		}
 
 		public virtual double GetAosDamage( Mobile attacker, int bonus, int dice, int sides )
@@ -3435,6 +3460,9 @@ namespace Server.Items
 
 			if ( m_Hits >= 0 && m_MaxHits > 0 )
 				list.Add( 1060639, "{0}\t{1}", m_Hits, m_MaxHits ); // durability ~1_val~ / ~2_val~
+			
+			// mod to display attachment properties
+			Server.Engines.XmlSpawner2.XmlAttach.AddAttachmentProperties(this, list);
 		}
 
 		public override void OnSingleClick( Mobile from )

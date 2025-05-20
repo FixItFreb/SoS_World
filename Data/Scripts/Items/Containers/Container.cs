@@ -229,6 +229,12 @@ namespace Server.Items
 				Server.Gumps.QuickBar.RefreshQuickBar( from );
 				Server.Gumps.RegBar.RefreshRegBar( from );
 			}
+			
+			// ARTEGORDONMOD
+			// Begin mod for spawner release of items
+			// set flag to have item taken off spawner list at next defrag
+            ItemFlags.SetTaken(dropped,true);
+            // End mod for spawner release of items
 
 			return true;
 		}
@@ -262,6 +268,12 @@ namespace Server.Items
 				Server.Gumps.QuickBar.RefreshQuickBar( from );
 				Server.Gumps.RegBar.RefreshRegBar( from );
 			}
+			
+			// ARTEGORDONMOD
+			// Begin mod for spawner release of items
+			// set flag to have item taken off spawner list at next defrag
+            ItemFlags.SetTaken(item,true);
+            // End mod for spawner release of items
 
 			return true;
 		}

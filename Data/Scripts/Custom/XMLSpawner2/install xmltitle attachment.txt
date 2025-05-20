@@ -1,0 +1,24 @@
+--- IN BASECREATURE.CS ---
+--- ADD ---
+using Server.Engines.XmlSpawner2;
+
+--- FIND ---
+public override void AddNameProperties(ObjectPropertyList list)
+{
+	base.AddNameProperties(list);
+	
+--- ADD BELOW ---
+XmlTitle.AddTitles(this, list);
+
+
+
+--- IN PLAYERMOBILE.CS ---
+--- ADD ---
+using Server.Engines.XmlSpawner2;
+
+--- ADD METHOD ---
+public override void AddNameProperties(ObjectPropertyList list)
+{
+	base.AddNameProperties(list);
+	XmlTitle.AddTitles(this, list);
+} 

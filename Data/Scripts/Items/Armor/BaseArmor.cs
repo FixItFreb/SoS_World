@@ -1166,7 +1166,16 @@ namespace Server.Items
 				}
 			}
 
-			return base.CanEquip( from );
+			//return base.CanEquip( from );
+			// XmlAttachment check for CanEquip
+			if(!Server.Engines.XmlSpawner2.XmlAttach.CheckCanEquip(this, from))
+			{
+				return false;
+			}
+			else
+			{
+				return base.CanEquip( from );
+			}
 		}
 
 		public override bool CheckPropertyConfliction( Mobile m )
@@ -1222,6 +1231,9 @@ namespace Server.Items
 					{ Item firstValid = from.FindItemOnLayer( Layer.FirstValid ); from.Backpack.DropItem( firstValid ); }
 			}
 
+			//return base.OnEquip( from );
+			// XmlAttachment check for OnEquip
+			Server.Engines.XmlSpawner2.XmlAttach.CheckOnEquip(this, from);
 			return base.OnEquip( from );
 		}
 
@@ -1243,6 +1255,9 @@ namespace Server.Items
 				m.CheckStatTimers();
 			}
 
+			//base.OnRemoved( parent );
+			// XmlAttachment check for OnRemoved
+			Server.Engines.XmlSpawner2.XmlAttach.CheckOnRemoved(this, parent);
 			base.OnRemoved( parent );
 		}
 
@@ -1487,6 +1502,9 @@ namespace Server.Items
 
 			if ( m_HitPoints >= 0 && m_MaxHitPoints > 0 )
 				list.Add( 1060639, "{0}\t{1}", m_HitPoints, m_MaxHitPoints ); // durability ~1_val~ / ~2_val~
+			
+			// mod to display attachment properties
+			Server.Engines.XmlSpawner2.XmlAttach.AddAttachmentProperties(this, list);
 		}
 
 		public override void OnSingleClick( Mobile from )

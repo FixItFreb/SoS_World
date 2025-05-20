@@ -17,6 +17,7 @@ using Server.Spells.Elementalism;
 using System.Text;
 using Server;
 using System.IO;
+using Server.Engines.XmlSpawner2;
 
 namespace Server.Mobiles
 {
@@ -7813,6 +7814,9 @@ namespace Server.Mobiles
 		{
 			base.AddNameProperties( list );
 
+			// Support for XMLTitle attachment
+			XmlTitle.AddTitles(this, list);
+
 			if ( DisplayWeight && Controlled )
 				list.Add( TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString() ); // Weight: ~1_WEIGHT~ stones
 
@@ -8519,6 +8523,8 @@ namespace Server.Mobiles
 					{
 						Titles.AwardFame( titles[ i ], fame[ i ], true );
 						Titles.AwardKarma( titles[ i ], karma[ i ], true );
+						// modification to support XmlQuest Killtasks
+						XmlQuest.RegisterKill( this, titles[ i ]);
 					}
 				}
 
