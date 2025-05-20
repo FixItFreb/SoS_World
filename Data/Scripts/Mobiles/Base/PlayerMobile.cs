@@ -104,8 +104,8 @@ namespace Server.Mobiles
 		public void CraftMessage()
 		{
 			Craft_Snd_Timer = Timer.DelayCall( TimeSpan.FromSeconds( 1.0 ), new TimerStateCallback( CraftSound_Callback ), this );
-			Craft_Aft_Timer = Timer.DelayCall( TimeSpan.FromSeconds( 3.0 ), new TimerStateCallback( CraftAfter_Callback ), this );
-			Craft_Msg_Timer = Timer.DelayCall( TimeSpan.FromSeconds( 5.0 ), new TimerStateCallback( CraftMessage_Callback ), this );
+			Craft_Aft_Timer = Timer.DelayCall( TimeSpan.FromSeconds( 1.5 ), new TimerStateCallback( CraftAfter_Callback ), this );
+			Craft_Msg_Timer = Timer.DelayCall( TimeSpan.FromSeconds( 2.0 ), new TimerStateCallback( CraftMessage_Callback ), this );
 		}
 
 		private void CraftMessage_Callback( object state )
@@ -806,21 +806,26 @@ namespace Server.Mobiles
 		}
 
 		public virtual void UpdateFollowers(){
-
-			if ( (this.Skills[SkillName.Herding].Base >= 120.0) && (this.Skills[SkillName.Veterinary].Base >= 120.0) && (this.Skills[SkillName.Druidism].Base >= 120.0) && (this.Skills[SkillName.Taming].Base >= 120.0) )
-			this.FollowersMax = 8;
-
-			else if ( (this.Skills[SkillName.Herding].Base >= 90) && (this.Skills[SkillName.Veterinary].Base >= 90) && (this.Skills[SkillName.Druidism].Base >= 90) && (this.Skills[SkillName.Taming].Base >= 90) )
-			this.FollowersMax = 7;
-
-			else if ( (this.Skills[SkillName.Herding].Base >= 60) && (this.Skills[SkillName.Veterinary].Base >= 60) && (this.Skills[SkillName.Druidism].Base >= 60) && (this.Skills[SkillName.Taming].Base >= 60) )
-			this.FollowersMax = 6;
-
-			else 
-			this.FollowersMax = 5;
-
+			this.FollowersMax = CalculateFollowersMax();
 			// Additional slots, if configured, are added after the max is determined by skill mastery above
 			this.FollowersMax += MyServerSettings.AdditionalFollowerSlots();
+		}
+
+		private int CalculateFollowersMax()
+		{
+			double herding = MySettings.S_ItemInfluencedTamingSlots ? this.Skills[SkillName.Herding].Value : this.Skills[SkillName.Herding].Base;
+			double veterinary = MySettings.S_ItemInfluencedTamingSlots ? this.Skills[SkillName.Veterinary].Value : this.Skills[SkillName.Veterinary].Base;
+			double druidism = MySettings.S_ItemInfluencedTamingSlots ? this.Skills[SkillName.Druidism].Value : this.Skills[SkillName.Druidism].Base;
+			double taming = MySettings.S_ItemInfluencedTamingSlots ? this.Skills[SkillName.Taming].Value : this.Skills[SkillName.Taming].Base;
+
+			if (herding >= 120 && veterinary >= 120 && druidism >= 120 && taming >= 120)
+				return 8;
+			if (herding >= 90 && veterinary >= 90 && druidism >= 90 && taming >= 90)
+				return 7;
+			if (herding >= 60 && veterinary >= 60 && druidism >= 60 && taming >= 60)
+				return 6;
+
+			return 5;
 		}
 
 		public override int GetMaxResistance( ResistanceType type )
@@ -2112,7 +2117,7 @@ namespace Server.Mobiles
 						{
 							this.Send(SpeedControl.Disable);
 							shoes.Weight = 5.0;
-							if ( !(shoes is HikingBoots) ){ this.SendMessage( "These shoes seem to have their magic diminished here." ); }
+							if ( !(shoes is HikingBoots) || !(shoes is LevelHikingBoots || !(shoes is GiftHikingBoots)) ){ this.SendMessage( "These shoes seem to have their magic diminished here." ); }
 						}
 
 						Server.Spells.Mystic.WindRunner.RemoveEffect( this );
@@ -2136,7 +2141,7 @@ namespace Server.Mobiles
 					shoes.Weight = 3.0;
 					this.Send(SpeedControl.MountSpeed);
 				}
-				else if ( shoes is HikingBoots && shoes.Weight > 3.0 && RaceID > 0 )
+				else if ( (shoes is HikingBoots || shoes is LevelHikingBoots || shoes is GiftHikingBoots) && shoes.Weight > 3.0 && RaceID > 0 )
 				{
 					shoes.Weight = 3.0;
 					this.Send(SpeedControl.MountSpeed);
@@ -2157,7 +2162,7 @@ namespace Server.Mobiles
 					shoes.Weight = 3.0;
 					this.Send(SpeedControl.MountSpeed);
 				}
-				else if ( shoes is HikingBoots && shoes.Weight > 3.0 && RaceID > 0 )
+				else if ( (shoes is HikingBoots || shoes is LevelHikingBoots || shoes is GiftHikingBoots) && shoes.Weight > 3.0 && RaceID > 0 )
 				{
 					shoes.Weight = 3.0;
 					this.Send(SpeedControl.MountSpeed);
@@ -4020,7 +4025,7 @@ namespace Server.Mobiles
 					Item shoes = pm.FindItemOnLayer( Layer.Shoes );
 					if ( shoes is Artifact_BootsofHermes ){ return true; }
 					else if ( shoes is Artifact_SprintersSandals ){ return true; }
-					else if ( shoes is HikingBoots && pm.RaceID > 0 ){ return true; }
+					else if ( (shoes is HikingBoots || shoes is LevelHikingBoots || shoes is GiftHikingBoots) && pm.RaceID > 0 ){ return true; }
 				}
 				if ( Spells.Mystic.WindRunner.UnderEffect( pm ) )
 				{
@@ -4538,7 +4543,7 @@ namespace Server.Mobiles
 					if ( pet is IMount && ((IMount)pet).Rider != null )
 						continue;
 
-					if ( (pet is PackLlama || pet is PackHorse || pet is Beetle || pet is HordeMinionFamiliar) && (pet.Backpack != null && pet.Backpack.Items.Count > 0) )
+					if ( (pet is PackMule || pet is PackLlama || pet is PackHorse || pet is Beetle || pet is HordeMinionFamiliar) && (pet.Backpack != null && pet.Backpack.Items.Count > 0) )
 						continue;
 
 					pet.ControlTarget = null;
