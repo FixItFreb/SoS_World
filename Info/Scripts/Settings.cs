@@ -259,6 +259,10 @@ namespace Server
     // level to determine the maximum amount of poison charges a weapon can have, as well as how many charges are applied with each dose. 
         public static bool poisoningCharges = true;
 
+	// If true, player footstep sounds will change based on terrain (grass, stone, wood, etc.). 
+	// Must also uncheck the 'Play footstep sounds' option in ClassicUO settings
+		public static bool S_PlayerTerrainFootstepSounds = true;
+
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	// 004 - QUESTS & TREASURE ////////////////////////////////////////////////////////////////////
@@ -301,10 +305,6 @@ namespace Server
 	// they can only steal each one once.
 
 		public static bool S_DecoArtySteal = false;
-
-	// If set to true, then characters will not receive artifacts from stealable boxes in dungeons. 
-
-		public static bool S_PedStealThrottle = true;
 
 	// If set to true (default), then a character will get a warning before they are entering Skara Brae. This area is an extensive
 	// quest driven area, that has some quest requirements to be met before they can leave that area.
@@ -482,14 +482,6 @@ namespace Server
 
 		public static int S_SpawnMin = 45;
 		public static int S_SpawnMax = 60;
-
-
-	// This settings controls the limit in seconds by which you can be paralyzed by a monster. 
-	// The default is 10 seconds. It mainly affects mummies, ants, plants and spiders. Setting it to a
-	// value higher than 10 could mean that the paralyze cooldown is lower than its duration, 
-	// which can lead to frustrating fights as enemies can flee and chain-paralyze a character until they heal 
-	// enough to get back into the fight. 
-		public static double S_paralyzeDuration = 10.0;
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	// 008 - MERCHANTS ////////////////////////////////////////////////////////////////////////////
@@ -776,6 +768,11 @@ namespace Server
 
 		public static bool S_Humanoids = true;
 
+	// This setting controls the number of random visitors that will randomly appear in cities e.g.
+	// adventurers that stand around practicing magery. This value is a percentage between 0 and 100
+	// used when determining whether a visitor appear in a spot for the day.
+
+		public static int S_RandomCityVisitorsChance = 50;
 
 
 
